@@ -1,6 +1,21 @@
 version: '3.8'
 
 services:
+  redis:
+    image: redis:7-alpine
+    container_name: redis-server
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    command: redis-server --appendonly yes --requirepass 1234
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD", "redis-cli", "-a", "1234", "ping" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
   backend:
     build: ./backend
     ports:
@@ -8,12 +23,12 @@ services:
     volumes:
       - ./backend:/app
       - ./data:/data
+    env_file:
+      - ./backend/.env
     environment:
-      - OLLAMA_HOST=ollama
-      - DATABASE_URL=postgresql://postgres:postgres@db:5432/ragdb
+      - DATABASE_URL=${DATABASE_URL}
     depends_on:
-      - db
-      - ollama
+      - redis
 
   frontend:
     build: ./frontend
@@ -22,29 +37,13 @@ services:
     volumes:
       - ./frontend:/app
       - /app/node_modules
-    depends_on:
-     - backend
-
-  db:
-    image: ankane/pgvector:latest
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: ragdb
-      POSTGRES_INITDB_ARGS: "--encoding=UTF8 --locale=C"
-    volumes:
-      - postgres-data:/var/lib/postgresql/data
-      - ./postgres/schema.sql:/docker-entrypoint-initdb.d/schema.sql
-    ports:
-      - "5432:5432"
-
-  ollama:
-    build: ./ollama
-    volumes:
-      - ollama-data:/root/.ollama
-    ports:
-      - "11434:11434"
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
+    stdin_open: true
+    tty: true
+    depends_on:
+      - backend
 
 volumes:
-  postgres-data:
-  ollama-data:
+  redis-data:

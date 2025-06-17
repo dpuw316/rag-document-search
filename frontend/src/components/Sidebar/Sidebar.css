@@ -1,0 +1,352 @@
+.sidebar {
+  width: 250px;
+  height: 100%;
+  background-color: var(--bg-secondary);
+  border-right: 1px solid var(--border-color);
+  overflow-y: auto;
+  transition: background-color 0.3s, border-color 0.3s, width 0.3s, left 0.3s ease;
+}
+
+.sidebar-header {
+  padding: 15px;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: border-color 0.3s;
+}
+
+.sidebar-header h3 {
+  font-size: 16px;
+  color: var(--text-primary);
+  margin: 0;
+  transition: color 0.3s;
+}
+
+.sidebar-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.refresh-sidebar-btn {
+  background-color: transparent;
+  border: none;
+  color: var(--highlight-color);
+  cursor: pointer;
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.refresh-sidebar-btn:hover {
+  background-color: rgba(var(--highlight-color-rgb), 0.1);
+}
+
+.close-sidebar-btn {
+  display: none; /* 기본적으로 숨김, 모바일에서만 표시 */
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.directory-list {
+  padding: 10px 0;
+}
+
+.directory-item {
+  display: flex;
+  align-items: center;
+  padding: 8px 15px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  white-space: nowrap;
+  overflow: hidden;
+  color: var(--text-primary);
+}
+
+.directory-item:hover {
+  background-color: var(--item-hover);
+}
+
+.directory-item.active {
+  background-color: var(--bg-tertiary);
+  font-weight: bold;
+}
+
+/* 하위 디렉토리 컨테이너 */
+.subdirectory-container {
+  transition: max-height 0.3s ease-in-out;
+  overflow: hidden;
+}
+
+/* 토글 아이콘 스타일 */
+.directory-toggle {
+  width: 16px;
+  height: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 5px;
+  flex-shrink: 0;
+}
+
+.toggle-icon {
+  font-size: 10px;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: transform 0.2s, color 0.3s;
+}
+
+.toggle-icon:hover {
+  color: var(--text-primary);
+}
+
+.toggle-icon.expanded {
+  transform: rotate(0deg);
+}
+
+.toggle-icon.collapsed {
+  transform: rotate(-90deg);
+}
+
+.directory-icon {
+  margin-right: 10px;
+  flex-shrink: 0;
+}
+
+.folder-icon {
+  display: inline-block;
+  width: 20px;
+  height: 16px;
+  background-color: var(--folder-color);
+  position: relative;
+  border-radius: 2px 2px 0 0;
+  transition: background-color 0.3s;
+}
+
+.folder-icon:before {
+  content: '';
+  position: absolute;
+  width: 8px;
+  height: 3px;
+  background-color: var(--folder-color);
+  top: -3px;
+  left: 0;
+  border-radius: 2px 2px 0 0;
+  transition: background-color 0.3s;
+}
+
+.directory-name {
+  font-size: 14px;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex-grow: 1;
+  transition: color 0.3s;
+}
+
+/* 홈 폴더(루트) 스타일 */
+.directory-item[style*="padding-left: 15px"] {
+  font-weight: 500;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border-color);
+  margin-bottom: 5px;
+  transition: border-color 0.3s;
+}
+
+/* 사이드바 토글 버튼 스타일 */
+.sidebar-toggle-btn {
+  display: none; /* 기본으로는 숨김 */
+  position: fixed;
+  top: 70px; /* 헤더 아래에 위치 */
+  left: 15px;
+  width: 40px;
+  height: 40px;
+  background-color: var(--highlight-color);
+  border: none;
+  border-radius: 4px;
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+  z-index: 90;
+  box-shadow: 0 2px 5px var(--shadow-color);
+  transition: background-color 0.2s;
+}
+
+.sidebar-toggle-btn:hover {
+  background-color: var(--highlight-hover);
+}
+
+/* 오버레이 스타일 */
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 80;
+}
+
+/* 반응형 스타일 추가 */
+
+/* 태블릿 크기 (1024px 이하) */
+@media (max-width: 1024px) {
+  .sidebar {
+    width: 220px;
+  }
+  
+  .directory-item {
+    padding: 8px 12px;
+  }
+  
+  .sidebar-header {
+    padding: 12px;
+  }
+  
+  .sidebar-header h3 {
+    font-size: 15px;
+  }
+}
+
+/* 작은 태블릿 크기 (768px 이하) */
+@media (max-width: 768px) {
+  .close-sidebar-btn {
+    display: block; /* 모바일에서 닫기 버튼 표시 */
+  }
+  
+  /* 모바일에서 사이드바 디렉토리 아이템 크기 키우기 (터치 영역 확대) */
+  .directory-item {
+    padding: 10px 15px;
+  }
+  
+  .directory-name {
+    font-size: 15px;
+  }
+  
+  .directory-toggle, .toggle-icon {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .toggle-icon {
+    font-size: 12px;
+  }
+  
+  /* 사이드바 토글 버튼 표시 */
+  .sidebar-toggle-btn {
+    display: block;
+  }
+  
+  /* 사이드바 오버레이 설정 (모바일) */
+  .sidebar-overlay.active {
+    display: block;
+  }
+}
+
+/* 모바일 크기 (480px 이하) */
+@media (max-width: 480px) {
+  .sidebar {
+    width: 270px; /* 더 넓은 사이드바 */
+    z-index: 100; /* 최상위 레이어로 */
+  }
+  
+  .directory-item {
+    padding: 12px 15px; /* 더 큰 터치 영역 */
+  }
+  
+  .directory-name {
+    font-size: 16px;
+  }
+  
+  /* 모바일에서 중첩된 디렉토리 패딩 증가 */
+  .subdirectory-container .directory-item {
+    padding-left: 25px !important;
+  }
+  
+  .subdirectory-container .subdirectory-container .directory-item {
+    padding-left: 35px !important;
+  }
+}
+
+/* 사이드바 토글 버튼 스타일 */
+.sidebar-toggle-btn {
+  display: none; /* 기본으로는 숨김 */
+  position: fixed;
+  top: 70px; /* 헤더 아래에 위치 */
+  left: 15px;
+  width: 40px;
+  height: 40px;
+  background-color: var(--highlight-color);
+  border: none;
+  border-radius: 4px;
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+  z-index: 90;
+  box-shadow: 0 2px 5px var(--shadow-color);
+  transition: background-color 0.2s;
+}
+
+.sidebar-toggle-btn:hover {
+  background-color: var(--highlight-hover);
+}
+
+/* 오버레이 스타일 */
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 80;
+}
+
+/* 모바일 크기에서 사이드바 처리 */
+@media (max-width: 768px) {
+  .sidebar-toggle-btn {
+    display: block; /* 모바일에서 표시 */
+    top: 60px; /* 위치 조정 */
+    left: 10px;
+    width: 36px;
+    height: 36px;
+    font-size: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    border-radius: 50%; /* 동그랗게 변경 */
+  }
+  
+  .sidebar {
+    position: fixed;
+    left: -280px; /* 화면 왼쪽 바깥으로 숨김 */
+    top: 0;
+    height: 100vh;
+    width: 270px;
+    z-index: 100;
+    transition: left 0.3s ease;
+    box-shadow: 2px 0 10px var(--shadow-color);
+  }
+  
+  .sidebar.active {
+    left: 0; /* active 클래스가 추가되면 화면에 표시 */
+  }
+  
+  /* 오버레이 영역 확장해서 사이드바와 메인 컨텐츠 겹침 방지 */
+  .sidebar-overlay.active {
+    display: block;
+    z-index: 99; /* 사이드바보다 낮은 z-index */
+  }
+}
